@@ -1,6 +1,7 @@
 package com.sparta.employeecsv;
 
 import java.sql.Date;
+import java.util.Objects;
 
 public class Employee {
     private int employeeID;
@@ -27,6 +28,8 @@ public class Employee {
         this.dateOfJoining = dateOfJoining;
         this.salary = salary;
     }
+
+    public Employee() {}
 
     public int getEmployeeID() {
         return employeeID;
@@ -106,5 +109,34 @@ public class Employee {
 
     public void setSalary(int salary) {
         this.salary = salary;
+    }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "employeeID=" + employeeID +
+                ", namePrefix='" + namePrefix + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", middleInitial=" + middleInitial +
+                ", lastName='" + lastName + '\'' +
+                ", gender=" + gender +
+                ", email='" + email + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", dateOfJoining=" + dateOfJoining +
+                ", salary=" + salary +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Employee employee = (Employee) o;
+        return employeeID == employee.employeeID;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(employeeID);
     }
 }
