@@ -8,7 +8,9 @@ public class CSVMain {
         // possibly display the faulty records
         String fileName = "EmployeeRecords.csv";
 
-        CSVProcessor processor = new CSVProcessor(fileName);
-        processor.readFile();
+        CSVProcessor processor = new CSVProcessor();
+        int linesRead = processor.readFile(fileName);
+        System.out.println(linesRead + " records processed");
+        System.out.println(processor.getClean());
     }
 }
