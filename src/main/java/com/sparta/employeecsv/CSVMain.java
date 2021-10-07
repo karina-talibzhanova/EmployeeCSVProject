@@ -1,5 +1,7 @@
 package com.sparta.employeecsv;
 
+import java.util.Arrays;
+
 public class CSVMain {
     public static void main(String[] args) {
         // get file name (either hardcode or user input)
@@ -10,7 +12,9 @@ public class CSVMain {
 
         CSVProcessor processor = new CSVProcessor();
         int linesRead = processor.readFile(fileName);
-        System.out.println(linesRead + " records processed");
-        System.out.println(processor.getClean());
+        System.out.println(linesRead + " records processed.");
+        System.out.println(processor.getClean().size() + " valid records.");
+        System.out.println(processor.getFaulty().size() + " faulty records.");
+        System.out.println(processor.getDuplicate().size() + " duplicate records.");
     }
 }

@@ -11,19 +11,19 @@ import java.util.ArrayList;
 
 public class CSVProcessor {
     private ArrayList<Employee> clean = new ArrayList<>();
-    private ArrayList<Employee> duplicate;
-    private ArrayList<Employee> corrupt;
+    private ArrayList<String> duplicate = new ArrayList<>();
+    private ArrayList<String> faulty = new ArrayList<>();
 
     public ArrayList<Employee> getClean() {
         return clean;
     }
 
-    public ArrayList<Employee> getDuplicate() {
+    public ArrayList<String> getDuplicate() {
         return duplicate;
     }
 
-    public ArrayList<Employee> getCorrupt() {
-        return corrupt;
+    public ArrayList<String> getFaulty() {
+        return faulty;
     }
 
     public int readFile(String fileName) {
@@ -48,36 +48,84 @@ public class CSVProcessor {
     public boolean parseLine(String line) {
         // determine if the line contains a valid record and add to appropriate collection
         String[] csv = line.split(",");
-        // if the line given doesn't have exactly 10 entries, record is incorrectly formatted
-        if (csv.length != 10) {
+
+        if (!isRecordValid(csv)) {
+            faulty.add(line);
             return false;
         } else {
-            // convert to Employee object
-            Employee employee = new Employee();
-            employee.setEmployeeID(Integer.parseInt(csv[0]));
-            employee.setNamePrefix(csv[1]);
-            employee.setFirstName(csv[2]);
-            employee.setMiddleInitial(csv[3].charAt(0));
-            employee.setLastName(csv[4]);
-            employee.setGender(csv[5].charAt(0));
-            employee.setEmail(csv[6]);
+            // create an Employee object
+            Employee employee = createEmployee(csv);
 
-            try {
-                java.util.Date dob = new SimpleDateFormat("MM/dd/yyyy").parse(csv[7]);
-                java.sql.Date sqlDob = new java.sql.Date(dob.getTime());
-                employee.setDateOfBirth(sqlDob);
-
-                java.util.Date doj = new SimpleDateFormat("MM/dd/yyyy").parse(csv[8]);
-                java.sql.Date sqlDoj = new java.sql.Date(doj.getTime());
-                employee.setDateOfJoining(sqlDoj);
-            } catch (ParseException e) {
-                e.printStackTrace();
+            // check if Employee object already exists in clean (i.e. is there a matching id?)
+            if (clean.contains(employee)) {
+                duplicate.add(line);
+                return false;
+            } else {
+                clean.add(employee);
+                return true;
             }
-            employee.setSalary(Integer.parseInt(csv[9]));
-
-            // add employee object to array
-            clean.add(employee);
-            return true;
         }
+    }
+
+    public boolean isRecordValid(String[] record) {
+        // if the line given doesn't have exactly 10 entries, record is incorrectly formatted
+        if (record.length != 10) {
+            return false;
+        }
+        // check if all array elements actually contain a value - either empty or just whitespace
+        for (String elem : record) {
+            if (elem.isBlank()) {
+                return false;
+            }
+        }
+        // only will check if employeeId is int, middle initial + gender are exactly 1 char, dates are dates, and salary is positive int
+        try {
+            Integer.parseInt(record[0]);  // test if employeeId is int
+            Integer.parseInt(record[9]);  // test if salary is int
+
+            new SimpleDateFormat("MM/dd/yyyy").parse(record[7]);  // test if date of birth string can be parsed into Date
+            new SimpleDateFormat("MM/dd/yyyy").parse(record[8]);  // test if date of joining string can be parsed into Date
+        } catch (NumberFormatException | ParseException e) {
+            return false;
+        }
+
+        // test if middle initial + gender are exactly 1 character
+        if (record[3].length() > 1 || record[5].length() > 1) {
+            return false;
+        }
+        // test if salary is a positive integer
+        if (Integer.parseInt(record[9]) < 0) {
+            return false;
+        }
+
+        // if everything is okay, return true
+        return true;
+    }
+
+    public Employee createEmployee(String[] record) {
+        Employee employee = new Employee();
+
+        employee.setEmployeeID(Integer.parseInt(record[0]));
+        employee.setNamePrefix(record[1]);
+        employee.setFirstName(record[2]);
+        employee.setMiddleInitial(record[3].charAt(0));
+        employee.setLastName(record[4]);
+        employee.setGender(record[5].charAt(0));
+        employee.setEmail(record[6]);
+
+        try {
+            java.util.Date dob = new SimpleDateFormat("MM/dd/yyyy").parse(record[7]);
+            java.sql.Date sqlDob = new Date(dob.getTime());
+            employee.setDateOfBirth(sqlDob);
+
+            java.util.Date doj = new SimpleDateFormat("MM/dd/yyyy").parse(record[8]);
+            java.sql.Date sqlDoj = new Date(doj.getTime());
+            employee.setDateOfJoining(sqlDoj);
+        } catch (ParseException e) {  // we shouldn't get an exception anyway bc this should all have been checked previously
+            e.printStackTrace();
+        }
+        employee.setSalary(Integer.parseInt(record[9]));
+
+        return employee;
     }
 }

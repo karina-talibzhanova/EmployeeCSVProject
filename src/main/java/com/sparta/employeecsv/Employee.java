@@ -127,6 +127,8 @@ public class Employee {
                 '}';
     }
 
+    // only checking if IDs match since in the given file, that is the only place where duplicates occur
+    // this will not work in the general case (e.g. 2 records of the same person but different IDs)
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
