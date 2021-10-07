@@ -108,9 +108,9 @@ public class CSVProcessor {
         employee.setEmployeeID(Integer.parseInt(record[0]));
         employee.setNamePrefix(record[1]);
         employee.setFirstName(record[2]);
-        employee.setMiddleInitial(record[3].charAt(0));
+        employee.setMiddleInitial(record[3]);
         employee.setLastName(record[4]);
-        employee.setGender(record[5].charAt(0));
+        employee.setGender(record[5]);
         employee.setEmail(record[6]);
 
         try {

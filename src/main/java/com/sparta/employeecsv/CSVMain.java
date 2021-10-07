@@ -1,6 +1,6 @@
 package com.sparta.employeecsv;
 
-import java.util.Arrays;
+
 
 public class CSVMain {
     public static void main(String[] args) {
@@ -16,5 +16,12 @@ public class CSVMain {
         System.out.println(processor.getClean().size() + " valid records.");
         System.out.println(processor.getFaulty().size() + " faulty records.");
         System.out.println(processor.getDuplicate().size() + " duplicate records.");
+        System.out.println("Writing to database...");
+
+        long start = System.currentTimeMillis();
+        int rowsWritten = DatabaseController.write(processor.getClean());
+        long end = System.currentTimeMillis();
+
+        System.out.println(rowsWritten + " rows written in " + (end-start) + "ms");
     }
 }

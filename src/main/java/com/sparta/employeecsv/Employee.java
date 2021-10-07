@@ -7,16 +7,16 @@ public class Employee {
     private int employeeID;
     private String namePrefix;
     private String firstName;
-    private char middleInitial;
+    private String middleInitial;
     private String lastName;
-    private char gender;
+    private String gender;
     private String email;
     private Date dateOfBirth;
     private Date dateOfJoining;
     private int salary;
 
-    public Employee(int employeeID, String namePrefix, String firstName, char middleInitial, String lastName,
-                    char gender, String email, Date dateOfBirth, Date dateOfJoining, int salary) {
+    public Employee(int employeeID, String namePrefix, String firstName, String middleInitial, String lastName,
+                    String gender, String email, Date dateOfBirth, Date dateOfJoining, int salary) {
         this.employeeID = employeeID;
         this.namePrefix = namePrefix;
         this.firstName = firstName;
@@ -55,11 +55,11 @@ public class Employee {
         this.firstName = firstName;
     }
 
-    public char getMiddleInitial() {
+    public String getMiddleInitial() {
         return middleInitial;
     }
 
-    public void setMiddleInitial(char middleInitial) {
+    public void setMiddleInitial(String middleInitial) {
         this.middleInitial = middleInitial;
     }
 
@@ -71,11 +71,11 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public char getGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(char gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
