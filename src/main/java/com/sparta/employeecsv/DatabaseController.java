@@ -10,7 +10,9 @@ public class DatabaseController {
         // create a database connection
         // create the columns names
         // write in the employee details
-        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:employee.db")) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/employees", "root", System.getenv("root"))) {
+            Statement dropTable = conn.createStatement();
+            dropTable.executeUpdate("DROP TABLE IF EXISTS employees");
             Statement writeColumns = conn.createStatement();
             writeColumns.executeUpdate("CREATE TABLE IF NOT EXISTS employees(" +
                                             "employeeID INTEGER PRIMARY KEY," +
