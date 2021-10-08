@@ -8,6 +8,14 @@ public class DatabaseController implements Runnable {
     private int lower;
     private int upper;
 
+    public DatabaseController(ArrayList<Employee> employees, int lower, int upper) {
+        this.employees = employees;
+        this.lower = lower;
+        this.upper = upper;
+    }
+
+    public DatabaseController() {}
+
     public ArrayList<Employee> getEmployees() {
         return employees;
     }

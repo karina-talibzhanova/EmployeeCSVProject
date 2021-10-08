@@ -16,33 +16,16 @@ public class CSVMain {
         System.out.println(processor.getClean().size() + " valid records.");
         System.out.println(processor.getFaulty().size() + " faulty records.");
         System.out.println(processor.getDuplicate().size() + " duplicate records.");
-        System.out.println("Writing to database...");
 
         DatabaseController.createTable();  // drops existing table, creates new one
 
-        // prepare my threads
-        DatabaseController d1 = new DatabaseController();
-        d1.setEmployees(processor.getClean());
-        d1.setLower(0);
-        d1.setUpper(processor.getClean().size()/2);
+        System.out.println("Creating threads...");
+        ThreadController threadController = new ThreadController(8, processor.getClean());
+        threadController.createThreads();
 
-        DatabaseController d2 = new DatabaseController();
-        d2.setEmployees(processor.getClean());
-        d2.setLower(processor.getClean().size()/2);
-        d2.setUpper(processor.getClean().size());
-
-        Thread t1 = new Thread(d1);
-        Thread t2 = new Thread(d2);
-
+        System.out.println("Writing to database...");
         long start = System.currentTimeMillis();
-        t1.start();
-        t2.start();
-        try{
-            t1.join();
-            t2.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        threadController.runThreads();
         long end = System.currentTimeMillis();
         System.out.println("Records written in " + (end-start) + "ms");
     }
