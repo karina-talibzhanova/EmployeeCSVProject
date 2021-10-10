@@ -96,4 +96,67 @@ public class CSVProcessorShould {
         processor.parseLine(record2);
         assertEquals(1, processor.getDuplicate().size());
     }
+
+    @Test
+    public void givenDuplicateId_AddStringToDuplicate() {
+        String record1 = "198429,Mrs.,Serafina,I,Bumgarner,F,serafina.bumgarner@exxonmobil.com,9/21/1982,2/1/2008,69294";
+        String record2 = "198429,Mrs.,Ivette,F,Manzanares,F,ivette.manzanares@gmail.com,7/26/1993,7/26/2014,189834";
+        processor.parseLine(record1);
+        processor.parseLine(record2);
+        assertEquals(1, processor.getDuplicate().size());
+    }
+
+    @Test
+    public void givenValidRecord_ReturnTrue() {
+        String[] record = "198429,Mrs.,Serafina,I,Bumgarner,F,serafina.bumgarner@exxonmobil.com,9/21/1982,2/1/2008,69294".split(",");
+        assertTrue(processor.isRecordValid(record));
+    }
+
+    @Test
+    public void givenNonIntegerId_ReturnFalse() {
+        String[] record = "not an integer,Mrs.,Serafina,I,Bumgarner,F,serafina.bumgarner@exxonmobil.com,9/21/1982,2/1/2008,69294".split(",");
+        assertFalse(processor.isRecordValid(record));
+    }
+
+    @Test
+    public void givenNonIntegerSalary_ReturnFalse() {
+        String[] record = "198429,Mrs.,Serafina,I,Bumgarner,F,serafina.bumgarner@exxonmobil.com,9/21/1982,2/1/2008,not an integer".split(",");
+        assertFalse(processor.isRecordValid(record));
+    }
+
+    @Test
+    public void givenNonDateDOB_ReturnFalse() {
+        String[] record = "198429,Mrs.,Serafina,I,Bumgarner,F,serafina.bumgarner@exxonmobil.com,not a date,2/1/2008,69294".split(",");
+        assertFalse(processor.isRecordValid(record));
+    }
+
+    @Test
+    public void givenNonDateDOJ_ReturnFalse() {
+        String[] record = "198429,Mrs.,Serafina,I,Bumgarner,F,serafina.bumgarner@exxonmobil.com,9/21/1982,not a date,69294".split(",");
+        assertFalse(processor.isRecordValid(record));
+    }
+
+    @Test
+    public void givenNonCharacterGender_ReturnFalse() {
+        String[] record = "198429,Mrs.,Serafina,I,Bumgarner,Female,serafina.bumgarner@exxonmobil.com,9/21/1982,2/1/2008,69294".split(",");
+        assertFalse(processor.isRecordValid(record));
+    }
+
+    @Test
+    public void givenNonCharacterMiddleInitial_ReturnFalse() {
+        String[] record = "198429,Mrs.,Serafina,not a character,Bumgarner,F,serafina.bumgarner@exxonmobil.com,9/21/1982,2/1/2008,69294".split(",");
+        assertFalse(processor.isRecordValid(record));
+    }
+
+    @Test
+    public void givenNegativeSalary_ReturnFalse() {
+        String[] record = "198429,Mrs.,Serafina,I,Bumgarner,F,serafina.bumgarner@exxonmobil.com,9/21/1982,2/1/2008,-69294".split(",");
+        assertFalse(processor.isRecordValid(record));
+    }
+
+    @Test
+    public void givenValidRecord_ReturnEmployeeObject() {
+        String[] record = "198429,Mrs.,Serafina,I,Bumgarner,F,serafina.bumgarner@exxonmobil.com,9/21/1982,2/1/2008,69294".split(",");
+        assertTrue(processor.createEmployee(record) instanceof Employee);
+    }
 }
