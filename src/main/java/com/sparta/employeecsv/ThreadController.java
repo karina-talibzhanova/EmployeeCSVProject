@@ -9,7 +9,11 @@ public class ThreadController {
     // i.e. i give input of 8, array is split into 8 even-ish chunks and 8 threads are created
     private int numThreads;
     private ArrayList<Employee> employees;
-    private ArrayList<Thread> threads = new ArrayList<Thread>();
+    private ArrayList<Thread> threads = new ArrayList<>();
+
+    public ArrayList<Thread> getThreads() {
+        return threads;
+    }
 
     public ThreadController(int numThreads, ArrayList<Employee> employees) {
         this.numThreads = numThreads;
